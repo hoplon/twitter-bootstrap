@@ -10,7 +10,7 @@
 (def +version+ "0.1.0")
 
 (task-options!
- pom  {:project     'hoploni/twitter-bootstrap
+ pom  {:project     'hoplon/twitter-bootstrap
        :version     +version+
        :description "hoplon components for twitter bootstrap"
        :url         ""
