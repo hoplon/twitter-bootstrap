@@ -6,6 +6,7 @@
 
 (require '[adzerk.bootlaces :refer :all]
          '[hoplon.boot-hoplon :refer :all])
+         
 
 (def +version+ "0.2.0")
 
@@ -16,4 +17,3 @@
        :url         ""
        :scm         {:url "https://github.com/hoplon/twitter-boostrap"}
        :license     {"" ""}})
-
