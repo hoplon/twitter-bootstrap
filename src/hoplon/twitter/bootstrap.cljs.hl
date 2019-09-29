@@ -1,4 +1,5 @@
-(ns hoplon.twitter.bootstrap)
+(ns hoplon.twitter.bootstrap
+  (:require [hoplon.core :as h]))
 
 (def ^:private cols-prefixes
   (for [i [:xs :sm :md :lg] j (range 1 13)]
@@ -19,49 +20,49 @@
   (reduce-kv #(assoc %1 (keyword (str "col-" (name %2) (cols-seps key) %3)) true) {} m))
 
 (defn- do-classes [elem key val]
-  (do! elem :class (merge (cols-reset key) (mkcol-key key val))))
+  (h/do! elem :class (merge (cols-reset key) (mkcol-key key val))))
 
 (defmethod do! :col    [elem key val] (do-classes elem key val))
 (defmethod do! :offset [elem key val] (do-classes elem key val))
 (defmethod do! :push   [elem key val] (do-classes elem key val))
 (defmethod do! :pull   [elem key val] (do-classes elem key val))
 
-(defmethod do! :success [elem _ val] (do! elem :class {:has-success (boolean val)}))
-(defmethod do! :warning [elem _ val] (do! elem :class {:has-warning (boolean val)}))
-(defmethod do! :error   [elem _ val] (do! elem :class {:has-error   (boolean val)}))
+(defmethod do! :success [elem _ val] (h/do! elem :class {:has-success (boolean val)}))
+(defmethod do! :warning [elem _ val] (h/do! elem :class {:has-warning (boolean val)}))
+(defmethod do! :error   [elem _ val] (h/do! elem :class {:has-error   (boolean val)}))
 
-(defelem container       [attr kids] ((div :class "container") attr kids))
-(defelem form-horizontal [attr kids] ((form :role "form" :class "form-horizontal") attr kids))
-(defelem control-label   [attr kids] ((label :class "control-label") attr kids))
-(defelem form-group      [attr kids] ((div :class "form-group") attr kids))
-(defelem checkbox        [attr kids] ((div :class "checkbox") attr kids))
+(h/defelem container       [attr kids] (h/div :class "container" attr kids))
+(h/defelem form-horizontal [attr kids] (h/form :role "form" :class "form-horizontal" attr kids))
+(h/defelem control-label   [attr kids] (h/label :class "control-label" attr kids))
+(h/defelem form-group      [attr kids] (h/div :class "form-group" attr kids))
+(h/defelem checkbox        [attr kids] (h/div :class "checkbox" attr kids))
 
-(defelem active
+(h/defelem active
   [{:keys [state]} [kid]]
   (kid :class (cell= {:active state})))
 
-(defelem deck
+(h/defelem deck
   [{:keys [state]} kids]
   (->> kids
     (map-indexed #(active :state (cell= (= %1 state)) %2))))
 
-(defelem selector
+(h/defelem selector
   [{:keys [state event]} kids]
   (->> kids
     (deck :state state)
     (map-indexed #(%2 event (fn [_] (reset! state %1))))))
 
-(defelem tab-tab [attr [txt]] (a :href "javascript:void(0)" txt))
-(defelem content [attr kids]  (div kids))
-(defelem tab     [attr kids]  [(tab-tab (:name attr)) (content kids)])
+(h/defelem tab-tab [attr [txt]] (h/a :href "javascript:void(0)" txt))
+(h/defelem content [attr kids]  (h/div kids))
+(h/defelem tab     [attr kids]  [(tab-tab (:name attr)) (content kids)])
 
 (def ^:private trans (partial apply map vector))
 
-(defelem tabs
+(h/defelem tabs
   [{:keys [state]} kids]
   (let [[trigs ctnrs] (trans (partition 2 kids))
         state (or state (cell 0))
-        trigs (selector :state state :event :click (map li trigs))
+        trigs (selector :state state :event :click (map h/li trigs))
         ctnrs (deck :state state (map #(% :class "tab-pane") ctnrs))]
-    [(ul :class "nav nav-tabs" trigs)
-     (div :class "tab-content" ctnrs)]))
+    [(h/ul :class "nav nav-tabs" trigs)
+     (h/div :class "tab-content" ctnrs)]))
