@@ -15,5 +15,5 @@
        :version     +version+
        :description "Hoplon components for twitter bootstrap"
        :url         ""
-       :scm         {:url "https://github.com/hoplon/twitter-boostrap"}
+       :scm         {:url "https://github.com/hoplon/twitter-bootstrap"}
        :license     {"" ""}})
